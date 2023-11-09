@@ -1,0 +1,234 @@
+extends ../base-panel.pug 
+
+block variables
+    - var pageTitle = 'اعلان ها';
+
+block vendorsCss
+    link(rel="stylesheet", href="/static/vendor/libs/quill/katex.css")
+    link(rel="stylesheet", href="/static/vendor/libs/quill/editor-fa.css")
+    link(rel="stylesheet", href="/static/vendor/libs/select2/select2.css")
+
+block pageCss
+    link(rel="stylesheet", href="/static/vendor/css/pages/app-email.css")
+
+block content
+    div.app-email.card
+        div.border-0
+            div.row.g-0
+                div.col.app-email-sidebar.border-end.flex-grow-0#app-email-sidebar
+                    if NoitceManagement.includes(user.role)
+                        div.btn-compost-wrapper.d-grid
+                            button.btn.btn-primary.btn-compose#emailComposeSidebarLabel(data-bs-toggle="modal", data-bs-target="#emailComposeSidebar") ایجاد 
+                    div.email-filters.py-2
+                        ul.email-filter-folders.list-unstyled.mb-4
+                            li(class=`d-flex mb-2 justify-content-between${asideNotice === 'unreaded' ? ' active': ''}`, data-target="my-notice")
+                                a.d-flex.flex-wrap.align-items-center(href="/notice/unreaded")
+                                    i.bx.bx-envelope
+                                    span.align-middle.ms-2 خوانده نشده
+                                div.badge.bg-label-primary.rounded-pill #{asideNotice === 'unreaded' ? `${notices.length}` : ''}
+                            li(class=`d-flex mb-2 justify-content-between${asideNotice === 'readed' ? ' active': ''}`, data-target="my-notice")
+                                a.d-flex.flex-wrap.align-items-center(href="/notice/readed")
+                                    i.bx.bx-envelope
+                                    span.align-middle.ms-2 خوانده شده
+                                div.badge.bg-label-secondary.rounded-pill #{asideNotice === 'readed' ? `${notices.length}` : ''}
+                            li(class=`d-flex mb-2${asideNotice === 'management' ? ' active': ''}`, data-target="management-notice")
+                                a.d-flex.flex-wrap.align-items-center(href="/notice/management")
+                                    i.bx.bx-paper-plane
+                                    span.align-middle.ms-2 مدیریت اعلانات
+
+
+
+
+                div.col.app-emails-list
+                    div.card.shadow-none.border-0
+                        div.card-body.emails-list-header.p-3.py-lg-3.py-2
+                            //  Email List: Search 
+                            div.d-flex.justify-content-between.align-items-center.mb-2.mb-lg-3
+                                div.d-flex.align-items-center.w-100
+                                    i.bx.bx-menu.bx-sm.cursor-pointer.d-block.d-lg-none.me-3(data-bs-toggle="sidebar", data-target="#app-email-sidebar", data-overlay)
+                                    div.w-100
+                                        div.input-group.input-group-merge.shadow-none
+                                            span.input-group-text.border-0.ps-0#email-search
+                                                i.bx.bx-search.fs-4
+                                            input.form-control.email-search-input.border-0(type="text", placeholder="جستجوی ایمیل", aria-label="Search mail", aria-describedby="email-search")
+                            hr.mx-n3.emails-list-header-hr.mb-2.mb-lg-3
+                            div.d-flex.justify-content-between.align-items-center
+                                div.d-flex.align-items-center
+                                    div.form-check.me-2.mb-1
+                                        input.form-check-input#email-select-all(type="checkbox")
+                                        label.form-check-label(for="email-select-all")
+                                    i.bx.bx-trash-alt.email-list-delete.cursor-pointer.me-2
+                                    i.bx.bx-envelope-open.email-list-read.cursor-pointer.me-2
+                        hr.container-m-nx.m-0
+                        div.email-list.pt-0
+                            ul.list-unstyled.m-0
+                                each n in notices
+                                    li.email-list-item(data-starred="true", data-bs-toggle="sidebar", data-target="#app-email-view")
+                                        div.d-flex.align-items-center
+                                            div.form-check.mb-1
+                                                input.email-list-item-input.form-check-input#email-1(type="checkbox")
+                                                label.form-check-label(for="email-1")
+                                            img.d-block.flex-shrink-0.rounded-circle.me-sm-3.me-0(src=`${n.author.profile}`, alt="user-avatar", height="32", width="32")
+                                            div.email-list-item-content.ms-2.ms-sm-0.me-2
+                                                span.email-list-item-username.me-2 #{n.author.firstName} #{n.author.lastName}
+                                                span.email-list-item-subject.d-xl-inline-block.d-block= n.title
+                                            div.email-list-item-meta.ms-auto.d-flex.align-items-center
+                                                span(data-label="private", class=`email-list-item-label badge badge-dot bg-${n.isReaded ? '' : 'primary' } d-none d-md-inline-block me-2`)
+                                                small.email-list-item-time.text-muted= customeFormatTime(n.createdAt)
+                                                ul.list-inline.email-list-item-actions
+                                                    li.list-inline-item.email-read
+                                                        a(href=`/notice/read/${n.id}`)
+                                                            i.bx.bx-envelope-open
+                                                    li.list-inline-item.email-delete
+                                                        a(href=`/notice/delete/${n.id}`)
+                                                            i.bx.bx-trash
+
+                    div.app-overlay
+                div.col.app-email-view.flex-grow-0.bg-body#app-email-view
+                    div.card.shadow-none.border-0.rounded-0.app-email-view-header.px-3.py-lg-3.py-2
+                        div.d-flex.justify-content-between.align-items-center.py-2
+                            div.d-flex.align-items-center.overflow-hidden
+                                i.bx.bx-chevron-left.bx-sm.cursor-pointer.me-2(data-bs-toggle="sidebar", data-target="#app-email-view")
+                                h6.text-truncate.mb-0.me-2 لورم ایپسوم متن ساختگی با تولید
+                                span.badge.bg-label-danger شخصی
+                            div.d-flex.align-items-center.align-items-center
+                                i.bx.bx-printer.d-sm-block.d-none
+                                div.dropdown.ms-3
+                                    button.btn.p-0#dropdownMoreOptions(type="button", data-bs-toggle="dropdown", aria-haspopup="true", aria-expanded="false")
+                                        i.bx.bx-dots-vertical-rounded
+                                    div.dropdown-menu.dropdown-menu-end(aria-labelledby="dropdownMoreOptions")
+                                        a.dropdown-item(href="javascript:void(0)")
+                                            i.bx.bx-envelope-open.bx-xs.me-1
+                                            span.align-middle علامت خوانده نشده
+                                        a.dropdown-item(href="javascript:void(0)")
+                                            i.bx.bx-envelope-open.bx-xs.me-1
+                                            span.align-middle علامت خوانده نشده
+                                        a.dropdown-item(href="javascript:void(0)")
+                                            i.bx.bx-star.bx-xs.me-1
+                                            span.align-middle افزودن ستاره
+                                        a.dropdown-item(href="javascript:void(0)")
+                                            i.bx.bx-calendar.bx-xs.me-1
+                                            span.align-middle ایجاد رویداد
+                                        a.dropdown-item(href="javascript:void(0)")
+                                            i.bx.bx-volume-mute.bx-xs.me-1
+                                            span.align-middle بیصدا کردن
+                                        a.dropdown-item.d-sm-none.d-block(href="javascript:void(0)")
+                                            i.bx.bx-printer.bx-xs.me-1
+                                            span.align-middle چاپ
+                        hr.app-email-view-hr.mx-n3.mb-2.mb-lg-3.mt-2.mt-lg-3
+                        div.d-flex.justify-content-between.align-items-center
+                            div.d-flex.align-items-center
+                                i.bx.bx-trash-alt.cursor-pointer.me-3(data-bs-toggle="sidebar", data-target="#app-email-view")
+                                i.bx.bx-envelope-open.cursor-pointer.me-3
+                                div.dropdown.me-3
+                                    button.btn.p-0#dropdownMenuFolderOne(type="button", data-bs-toggle="dropdown", aria-haspopup="true", aria-expanded="false")
+                                        i.bx.bx-folder
+                                    div.dropdown-menu.dropdown-menu-end(aria-labelledby="dropdownMenuFolderOne")
+                                        a.dropdown-item(href="javascript:void(0)")
+                                            i.bx.bx-error-circle.bx-xs.me-1
+                                            span.align-middle اسپم
+                                        a.dropdown-item(href="javascript:void(0)")
+                                            i.bx.bx-pencil.bx-xs.me-1
+                                            span.align-middle پیش‌نویس
+                                        a.dropdown-item(href="javascript:void(0)")
+                                            i.bx.bx-trash.bx-xs.me-1
+                                            span.align-middle زباله دان
+                                div.dropdown.me-3
+                                    button.btn.p-0#dropdownLabelTwo(type="button", data-bs-toggle="dropdown", aria-haspopup="true", aria-expanded="false")
+                                        i.bx.bx-purchase-tag
+                                    div.dropdown-menu.dropdown-menu-end(aria-labelledby="dropdownLabelTwo")
+                                        a.dropdown-item(href="javascript:void(0)")
+                                            i.badge.badge-dot.bg-success
+                                            span.align-middle کارگاه
+                                        a.dropdown-item(href="javascript:void(0)")
+                                            i.badge.badge-dot.bg-primary
+                                            span.align-middle شرکت
+                                        a.dropdown-item(href="javascript:void(0)")
+                                            i.badge.badge-dot.bg-info
+                                            span.align-middle مهم
+                            div.d-flex.align-items-center.flex-wrap.justify-content-end
+                                span.d-sm-block.d-none.mx-3.text-muted 1-10 از 653
+                                i.bx.bx-chevron-left.scaleX-n1-rtl.cursor-pointer.text-muted.me-2.fs-4
+                                i.bx.bx-chevron-right.scaleX-n1-rtl.cursor-pointer.fs-4
+                    hr.m-0
+                    //  Email View : Content
+                    div.app-email-view-content.py-4
+                        div.card.email-card-last.mx-sm-4.mx-3.mt-4.border.shadow-none
+                            div.card-header.d-flex.justify-content-between.align-items-center.flex-wrap
+                                div.d-flex.align-items-center.mb-sm-0.mb-3
+                                    img.flex-shrink-0.rounded-circle.me-3(src="/static/img/avatars/1.png", alt="user-avatar", height="40", width="40")
+                                    div.flex-grow-1.ms-1.primary-font
+                                        h6.m-0 بیل گیتس
+                                        small.text-muted billgates@msn.com
+                                div.d-flex.align-items-center
+                                    p.mb-0.me-3.text-muted 20 خرداد 1402 - 08:10 ق.ظ
+                                    i.bx.bx-paperclip.cursor-pointer.me-2.fs-4
+                                    i.email-list-item-bookmark.bx.bx-star.cursor-pointer.me-2.fs-4
+                                    div.dropdown.me-3
+                                        button.btn.p-0#dropdownEmailTwo(type="button", data-bs-toggle="dropdown", aria-haspopup="true", aria-expanded="false")
+                                            i.bx.bx-dots-vertical-rounded.fs-4.lh-1
+                                        div.dropdown-menu.dropdown-menu-end(aria-labelledby="dropdownEmailTwo")
+                                            a.dropdown-item.scroll-to-reply(href="javascript:void(0)")
+                                                i.bx.bx-share.me-1
+                                                span.align-middle پاسخ
+                                            a.dropdown-item(href="javascript:void(0)")
+                                                i.bx.bx-share.me-1.scaleX-n1.scaleX-n1-rtl
+                                                span.align-middle فوروارد
+                                            a.dropdown-item(href="javascript:void(0)")
+                                                i.bx.bx-info-circle.me-1
+                                                span.align-middle گزارش
+                            div.card-body
+                                p.fw-bold تبریک!
+                                p لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده
+                                p لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای 
+                                p.mb-0 لورم ایپسوم متن ساختگی
+                                p.fw-bold.mb-0 تیم طراحی سایت
+                                hr
+                                p.email-attachment-title.mb-2 پیوست ها
+                                div.cursor-pointer
+                                    i.bx.bx-file
+                                    span.align-middle.ms-1 report.xlsx
+
+        div.app-email-compose.modal#emailComposeSidebar(tabindex="-1", aria-labelledby="emailComposeSidebarLabel", aria-hidden="true")
+            div.modal-dialog.m-0.me-md-4.mb-4.modal-lg
+                div.modal-content.p-0
+                    div.modal-header.py-3
+                        h5.modal-title.fs-5.secondary-font اعلان جدید
+                        button.btn-close(type="button", data-bs-dismiss="modal", aria-label="Close")
+                    div.modal-body.flex-grow-1.pb-sm-0.p-4.py-2
+                        form.email-compose-form(method="POST", action="/notice")
+                            div.email-compose-subject.d-flex.align-items-center.mb-2
+                                label.form-label.mb-0(for="notice-title") موضوع:
+                                input.form-control.border-0.shadow-none.flex-grow-1.mx-2#notice-title(type="text", name="title", placeholder="عنوان اعلان")
+                            div.email-compose-message.mx-n4
+                                div.d-flex.justify-content-end
+                                    div.email-editor-toolbar.border-bottom-0.w-100
+                                        span.ql-formats.me-0
+                                            button.ql-bold
+                                            button.ql-italic
+                                            button.ql-underline
+                                            button.ql-list(value="ordered")
+                                            button.ql-list(value="bullet")
+                                            button.ql-link
+                                input#htmlContent(type="hidden", name="content")
+                                div.email-editor
+                            hr.mx-n4.mt-0.mb-2
+                            div.email-compose-actions.d-flex.justify-content-between.align-items-center.mt-3.mb-3
+                                div.d-flex.align-items-center
+                                    div.btn-group
+                                        button.btn.btn-primary(type="submit") ارسال
+                                div.d-flex.align-items-center
+                                    button.btn(type="reset", data-bs-dismiss="modal", aria-label="Close")
+                                        i.bx.bx-trash
+
+
+block vendorsJs
+    script(src="/static/vendor/libs/quill/katex.js")
+    script(src="/static/vendor/libs/quill/quill.js")
+    script(src="/static/vendor/libs/select2/select2.js")
+    script(src="/static/vendor/libs/select2/i18n/fa.js")
+    script(src="/static/vendor/libs/block-ui/block-ui.js")
+
+
+block pageJs
+    script(src="/static/js/app-email.js")

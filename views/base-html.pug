@@ -1,0 +1,63 @@
+block variables
+
+doctype html
+html.light-style.customizer-hide(lang="fa", dir="rtl", data-theme="theme-default" data-assets-path="/static/" data-template="vertical-menu-template")
+    head 
+        meta(charset="utf-8")
+        
+        meta(name="viewport", content="width=device-width,initial-scale=1,user-scalable=no,minimum-scale=1,maximum-scale=1")
+        
+        title= pageTitle
+        
+        //  Favicon
+        link(rel="icon", type="image/x-icon", href="/static/img/favicon/favicon.ico")
+
+        //  Icons 
+        link(rel="stylesheet", href="/static/vendor/fonts/boxicons.css")
+        link(rel="stylesheet", href="/static/vendor/fonts/fontawesome.css")
+        link(rel="stylesheet", href="/static/vendor/fonts/flag-icons.css")
+        
+        //  Core CSS 
+        link(rel="stylesheet", href="/static/vendor/css/rtl/core.css")
+        link(rel="stylesheet", href="/static/vendor/css/rtl/theme-default.css")
+        link(rel="stylesheet", href="/static/css/demo.css")
+        link(rel="stylesheet", href="/static/vendor/css/rtl/rtl.css")
+        
+        //  Vendors CSS 
+        link(rel="stylesheet", href="/static/vendor/libs/perfect-scrollbar/perfect-scrollbar.css")
+        link(rel="stylesheet", href="/static/vendor/libs/typeahead-js/typeahead.css")
+        link(rel="stylesheet", href="/static/vendor/libs/formvalidation/dist/css/formValidation.min.css")
+
+        block vendorsCss        
+
+        //  Page CSS
+        block pageCss
+
+        //  Helpers 
+        script(src="/static/vendor/js/helpers.js")
+        script(src="/static/js/config.js")
+
+        block extraCss
+
+    body
+        block pageBody
+        
+        //  Core JS
+        script(src="/static/vendor/libs/jquery/jquery.js")
+        script(src="/static/vendor/libs/popper/popper.js")
+        script(src="/static/vendor/js/bootstrap.js")
+        script(src="/static/vendor/libs/perfect-scrollbar/perfect-scrollbar.js")
+        script(src="/static/vendor/libs/hammer/hammer.js")
+        script(src="/static/vendor/libs/i18n/i18n.js")
+        script(src="/static/vendor/libs/typeahead-js/typeahead.js")
+        script(src="/static/vendor/js/menu.js")
+
+        //  Vendors JS
+        block vendorsJs
+
+        //  Main JS
+        script(src="/static/js/main.js")
+        
+        block pageJs
+
+        block extraJs

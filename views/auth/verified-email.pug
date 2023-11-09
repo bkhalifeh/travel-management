@@ -1,0 +1,11 @@
+extends base-auth.pug
+
+block variables
+    - var pageTitle = 'تایید ایمیل | مدیریت اردو';
+
+block content
+    h4.mb-3.secondary-font ایمیل شما تایید شد
+    p.text-center
+        | برای ورود به حساب لینک زیر را دنبال کنید
+        br
+        a(href=`/auth/login`) ورود

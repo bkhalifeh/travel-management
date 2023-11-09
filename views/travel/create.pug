@@ -1,0 +1,129 @@
+extends ../base-panel.pug 
+
+block variables
+    - var pageTitle = `${titleCE} | اردو`;
+
+block vendorsCss
+    link(rel="stylesheet", href="/static/vendor/libs/select2/select2.css")
+    link(rel="stylesheet", href="/static/vendor/libs/tagify/tagify.css")
+    link(rel="stylesheet", href="/static/vendor/libs/bootstrap-select/bootstrap-select.css")
+    link(rel="stylesheet", href="/static/vendor/libs/typeahead-js/typeahead.css")
+    link(rel="stylesheet", href="/static/vendor/libs/dropzone/dropzone.css")
+
+block content
+    h4.py-3.breadcrumb-wrapper.mb-4
+        span.text-muted.fw-light اردو / 
+        | #{isEdit ? 'ویرایش' : 'ساخت'} اردو
+    div.row
+        div.col-12
+            div.card
+                div.card-body
+                    div.row
+                        div.col-lg-8.mx-auto
+                            div.row.g-3
+                                div(class=`col-md-${isEdit ? '12' : '6'}`)
+                                    label.form-label(for="travelTitle") عنوان
+                                    input#travelTitle.form-control(type="text", name="title", value=`${isEdit ? travel.title : '' }`)
+                                if !isEdit
+                                    div.col-md-6
+                                        label.form-label(for="travelImage") عکس برای معرفی اردو
+                                        input.form-control#travelImage(type="file")
+                                
+                                div.col-12
+                                    label.form-label(for="travelCaption") توضیحات
+                                    textarea.form-control#travelCaption(name="caption", rows="2") #{isEdit ? travel.caption : '' }
+
+                                div.col-md-2
+                                    label.form-label(for="travelLocation") مکان
+                                    input.form-control#travelLocation(type="text", name="location", value=`${isEdit ? travel.location : '' }`)
+                                div.col-md-2
+                                    label.form-label(for="travelPrice") هزینه ثبت نام (تومان)
+                                    input.form-control#travelPrice(type="number", value=`${isEdit ? travel.price : '1000' }`, step="1000")
+                                div.col-md-2
+                                    label.form-label(for="travelCapacity") ظرفیت
+                                    input.form-control#travelCapacity(type="number", value=`${isEdit ? travel.capacity : '50' }`)
+                                div.col-md-3
+                                    label.form-label(for="travelInsurance") بیمه
+                                    input.form-control#travelInsurance(type="text", value=`${isEdit ? travel.insurance : '' }`)
+                                div.col-md-3
+                                    label.form-label(for="travelDuration") مدت زمان اردو
+                                    input.form-control#travelDuration(type="text", value=`${isEdit ? travel.duration : '50' }`)
+
+                                div.col-md-4
+                                    label.form-label(for="travelResidence") محل اقامت
+                                    input.form-control#travelResidence(type="text", value=`${isEdit ? travel.residence : '' }`)
+                                div.col-md-4
+                                    label.form-label(for="travelTransportation") وسیله حمل و نقل
+                                    input.form-control#travelTransportation(type="text", value=`${isEdit ? travel.transportation : '' }`)
+                                div.col-md-4
+                                    label.form-label(for="travelMeals") وعده های غذایی
+                                    input.form-control#travelMeals(type="text", value=`${isEdit ? travel.meals : '' }`)
+
+                                div.col-md-6
+                                    label.form-label(for="travelServices") خدمات
+                                    input#travelServices.form-control(name="services", value=`${isEdit ? travel.services.join(', ') : '' }`)
+                                div.col-md-6
+                                    label.form-label(for="travelItemsNeeded") وسایل مورد نیاز
+                                    input#travelItemsNeeded.form-control(name="itemsNeeded", value=`${isEdit ? travel.itemsNeeded.join(', ') : '' }`)
+                                
+                                div.col-md-12.d-grid
+                                    button.btn.btn-success.btn-lg#buttonCreateTravel(type="button") #{isEdit ? 'ویرایش' : 'ساخت'} اردو
+
+
+block vendorsJs
+    script(src="/static/vendor/libs/select2/select2.js")
+    script(src="/static/vendor/libs/select2/i18n/fa.js")
+    script(src="/static/vendor/libs/tagify/tagify.js")
+    script(src="/static/vendor/libs/bootstrap-select/bootstrap-select.js")
+    script(src="/static/vendor/libs/bootstrap-select/i18n/defaults-fa_IR.js")
+    script(src="/static/vendor/libs/typeahead-js/typeahead.js")
+    script(src="/static/vendor/libs/bloodhound/bloodhound.js")
+    script(src="/static/vendor/libs/dropzone/dropzone.js")
+
+block pageJs
+    script(src="/static/js/forms-selects.js")
+    script(src="/static/js/forms-typeahead.js")
+    script(src="/static/js/forms-file-upload.js") 
+    script.
+        const travelServices = document.querySelector('#travelServices');
+        const tagifyService = new Tagify(travelServices);
+        const travelItemsNeeded = document.querySelector('#travelItemsNeeded');
+        const tagifyItemsNeeded = new Tagify(travelItemsNeeded);
+        const buttonCreateTravel = document.getElementById('buttonCreateTravel');
+        const travelTitle = document.getElementById('travelTitle');
+        const travelImage = document.getElementById('travelImage');
+        const travelCaption = document.getElementById('travelCaption');
+        const travelLocation = document.getElementById('travelLocation');
+        const travelPrice = document.getElementById('travelPrice');
+        const travelCapacity = document.getElementById('travelCapacity');
+        const travelInsurance = document.getElementById('travelInsurance');
+        const travelDuration = document.getElementById('travelDuration');
+        const travelResidence = document.getElementById('travelResidence');
+        const travelTransportation = document.getElementById('travelTransportation');
+        const travelMeals = document.getElementById('travelMeals');
+        function handleClickCreateTravel(e) {
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == XMLHttpRequest.DONE) {
+                    window.location = `/travel/${xhr.responseText}`;
+                }
+            };
+            xhr.open('POST', `/travel/!{isEdit ? `edit/${travel._id.toString()}` : 'create'}`, true);
+            const formData = new FormData();
+            formData.append('title', travelTitle.value);
+            !{isEdit ? '' : "formData.append('image', travelImage.files[0]);"}
+            formData.append('caption', travelCaption.value);
+            formData.append('location', travelLocation.value);
+            formData.append('price', parseInt(travelPrice.value));
+            formData.append('capacity', parseInt(travelCapacity.value));
+            formData.append('insurance', travelInsurance.value);
+            formData.append('duration', travelDuration.value);
+            formData.append('residence', travelResidence.value);
+            formData.append('transportation', travelTransportation.value);
+            formData.append('meals', travelMeals.value);
+            formData.append('services', tagifyService.value.map(v => v.value));
+            formData.append('itemsNeeded', tagifyItemsNeeded.value.map(v => v.value));
+            xhr.send(formData);
+        }
+        buttonCreateTravel.addEventListener('click', handleClickCreateTravel);
+                                

@@ -1,0 +1,132 @@
+extends ../base-panel.pug 
+
+block variables
+    - var pageTitle = 'خوانده نشده ها | اعلانات';
+
+block vendorsCss
+    link(rel="stylesheet", href="/static/vendor/libs/quill/katex.css")
+    link(rel="stylesheet", href="/static/vendor/libs/quill/editor-fa.css")
+    link(rel="stylesheet", href="/static/vendor/libs/select2/select2.css")
+
+block pageCss
+    link(rel="stylesheet", href="/static/vendor/css/pages/app-email.css")
+
+block content
+    div.app-email.card
+        div.border-0
+            div.row.g-0
+                div.col.app-email-sidebar.border-end.flex-grow-0#app-email-sidebar
+                    div.email-filters.py-2
+                        ul.email-filter-folders.list-unstyled.mb-4
+                            li(class=`d-flex mb-2 justify-content-between${asideComment === 'mycomment' ? ' active': ''}`, data-target="my-notice")
+                                a.d-flex.flex-wrap.align-items-center(href="/comment/mycomment")
+                                    i.bx.bx-message-square-dots
+                                    span.align-middle.ms-2 نظرات من
+                                //- div.badge.bg-label-primary.rounded-pill #{asideComment === 'unreaded' ? `${notices.length}` : ''}
+                            
+                            if CommentManagement.includes(user.role)
+                                li(class=`d-flex mb-2 justify-content-between${asideComment === 'manage-comment' ? ' active': ''}`, data-target="my-notice")
+                                    a.d-flex.flex-wrap.align-items-center(href="/comment/manage-comment")
+                                        i.bx.bx-chat
+                                        span.align-middle.ms-2 مدیریت نظرات
+                                    //- div.badge.bg-label-secondary.rounded-pill #{asideComment === 'readed' ? `${notices.length}` : ''}
+                                //- li(class=`d-flex mb-2 justify-content-between${asideComment === 'readed' ? ' active': ''}`, data-target="my-notice")
+                                //-     a.d-flex.flex-wrap.align-items-center(href="/comment/trash")
+                                //-         i.bx.bx-trash
+                                //-         span.align-middle.ms-2 زباله دان
+                                //-     div.badge.bg-label-secondary.rounded-pill #{asideComment === 'readed' ? `${notices.length}` : ''}
+
+
+                            //- li(class=`d-flex mb-2${asideNotice === 'management' ? ' active': ''}`, data-target="management-notice")
+                            //-     a.d-flex.flex-wrap.align-items-center(href="/notice/management")
+                            //-         i.bx.bx-paper-plane
+                            //-         span.align-middle.ms-2 مدیریت اعلانات
+
+
+
+
+                div.col.app-emails-list
+                    div.card.shadow-none.border-0
+                        div.card-body.emails-list-header.p-3.py-lg-3.py-2
+                            //  Email List: Search 
+                            div.d-flex.justify-content-between.align-items-center.mb-2.mb-lg-3
+                                div.d-flex.align-items-center.w-100
+                                    i.bx.bx-menu.bx-sm.cursor-pointer.d-block.d-lg-none.me-3(data-bs-toggle="sidebar", data-target="#app-email-sidebar", data-overlay)
+                                    div.w-100
+                                        div.input-group.input-group-merge.shadow-none
+                                            span.input-group-text.border-0.ps-0#email-search
+                                                i.bx.bx-search.fs-4
+                                            input.form-control.email-search-input.border-0(type="text", placeholder="جستجوی ایمیل", aria-label="Search mail", aria-describedby="email-search")
+                            //- hr.mx-n3.emails-list-header-hr.mb-2.mb-lg-3
+                            //- div.d-flex.justify-content-between.align-items-center
+                            //-     div.d-flex.align-items-center
+                                    //- div.form-check.me-2.mb-1
+                                    //-     input.form-check-input#email-select-all(type="checkbox")
+                                    //-     label.form-check-label(for="email-select-all")
+                                    //- i.bx.bx-trash-alt.email-list-delete.cursor-pointer.me-2
+                                    //- i.bx.bx-message-rounded-check.email-list-read.cursor-pointer.me-2
+                        hr.container-m-nx.m-0
+                        div.email-list.pt-0
+                            ul.list-unstyled.m-0
+                                each n in notices
+                                    li.email-list-item(data-starred="true", data-bs-toggle="sidebar", data-target=`#vn${n._id.toString()}`)
+                                        div.d-flex.align-items-center
+                                            //- div.form-check.mb-1
+                                            //-     input.email-list-item-input.form-check-input(type="checkbox", value=`${n._id.toString()}`)
+                                            //-     label.form-check-label
+                                            img.d-block.flex-shrink-0.rounded-circle.me-sm-3.me-0(src=`${n.author.profile}`, alt="user-avatar", height="32", width="32")
+                                            div.email-list-item-content.ms-2.ms-sm-0.me-2
+                                                span.email-list-item-username.me-2 #{n.author.firstName} #{n.author.lastName}
+                                                span.email-list-item-subject.d-xl-inline-block.d-block= n.travel.title
+                                            div.email-list-item-meta.ms-auto.d-flex.align-items-center
+                                                if !n.isVerified
+                                                    span.email-list-item-label.badge.badge-dot.bg-warning.d-none.d-md-inline-block.me-2(data-label="private")
+                                                small.email-list-item-time.text-muted= customeFormatTime(n.createdAt)
+                                                //- ul.list-inline.email-list-item-actions
+                                                //-     if CommentManagement.includes(user.role)
+                                                //-         li.list-inline-item
+                                                //-             a(href=`/comment/verified/${n.id}`)
+                                                //-                 i.bx.bx-message-rounded-check
+                                                //-         li.list-inline-item
+                                                //-             a(href=`/comment/delete/${n.id}`)
+                                                //-                 i.bx.bx-trash
+                    div.app-overlay
+                each n in notices
+                    div.col.app-email-view.flex-grow-0.bg-body(id=`vn${n._id.toString()}`)
+                        div.card.shadow-none.border-0.rounded-0.app-email-view-header.px-3.py-lg-3.py-2
+                            div.d-flex.justify-content-between.align-items-center.py-2
+                                div.d-flex.align-items-center.overflow-hidden
+                                    i.bx.bx-chevron-left.bx-sm.cursor-pointer.me-2(data-bs-toggle="sidebar", data-target=`#vn${n._id.toString()}`)
+                                    h6.text-truncate.mb-0.me-2= n.title
+                            //- hr.app-email-view-hr.mx-n3.mb-2.mb-lg-3.mt-2.mt-lg-3
+                            //- div.d-flex.justify-content-between.align-items-center
+                            //-     div.d-flex.align-items-center
+                            //-         if CommentManagement.includes(user.role)
+                            //-             a(href=`/comment/delete/${n.id}`)
+                            //-                 i.bx.bx-trash-alt.cursor-pointer.me-3
+                            //-             a(href=`/comment/verified/${n.id}`)
+                            //-                 i.bx.bx-message-rounded-check.cursor-pointer.me-3
+                        hr.m-0
+                        div.app-email-view-content.py-4
+                            div.card.mx-sm-4.mx-3.mt-4.border.shadow-none
+                                div.card-header.d-flex.justify-content-between.align-items-center.flex-wrap
+                                    div.d-flex.align-items-center.mb-sm-0.mb-3
+                                        img.flex-shrink-0.rounded-circle.me-3(src=`${n.author.profile}`, alt="user-avatar", height="40", width="40")
+                                        div.flex-grow-1.ms-1.primary-font
+                                            h6.m-0 #{n.author.firstName} #{n.author.lastName}
+                                            small.text-muted= n.author.email
+                                    div.d-flex.align-items-center
+                                        p.mb-0.me-3.text-muted= customeFormatTime(n.createdAt)
+                                div.card-body= n.content
+
+
+block vendorsJs
+    script(src="/static/vendor/libs/quill/katex.js")
+    script(src="/static/vendor/libs/quill/quill.js")
+    script(src="/static/vendor/libs/select2/select2.js")
+    script(src="/static/vendor/libs/select2/i18n/fa.js")
+    script(src="/static/vendor/libs/block-ui/block-ui.js")
+
+
+block pageJs
+    script(src="/static/js/notice-unreaded.js")

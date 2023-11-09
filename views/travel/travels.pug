@@ -1,0 +1,48 @@
+extends ../base-panel.pug 
+
+block variables
+    - var pageTitle = 'اردو ها | اردو';
+
+block extraCss
+    link(rel="stylesheet", href="/static/css/mystyle.css")
+
+block content
+    h4.py-3.breadcrumb-wrapper.mb-4
+        span.text-muted.fw-light اردو / 
+        | لیست اردو ها
+    div.row.mb-5#listTravels
+        each travel in travels
+            //- --- verial
+            div.col-md-6.col-lg-4.mb-2
+                div.card.h-100
+                    img.card-img-top(src=`${travel.image}`, alt="travel title")
+                    div.card-img-overlay
+                        h4.card-title
+                            span.badge.bg-label-success(style='text-align: left; float: left;') #{travel.price.toLocaleString()} تومان 
+                            //- a.btn.btn-sm.btn-label-success(style='text-align: left; float: left;', href="javascript:void(0);") #{travel.price} تومان 
+
+                    div.card-body
+                        h5.card-title= travel.title
+                        p.card-text= travel.caption
+                        p.card-text
+                            small.text-muted 
+                                i.fa-solid.fa-location-dot
+                                |  #{travel.location}
+                        div.demo-inline-spacing
+                            a.btn.btn-outline-primary.posrel(href=`/travel/${travel.id}`, style='text-align: left; float: left;') جزئیات اردو
+                            //- a.btn.btn-icon.btn-outline-warning.posrel(href=`/travel/edit/${travel.id}`)
+                            //-     span.tf-icons.bx.bx-edit
+                            
+                            //- if user.isAdmin
+                            if (travel.manager.role === user.role || [Role.SystemManager, Role.CollegeManager].includes(user.role) || (travel.manager.role === Role.ComputerForumAdmin && user.role === Role.ComputerGroupManager) || (travel.manager.role === Role.IndustryForumAdmin && user.role === Role.IndustryGroupManager))
+                                a.btn.btn-icon.btn-outline-warning.posrel(href=`/travel/edit/${travel.id}`)
+                                    span.tf-icons.bx.bx-edit
+                                a.btn.btn-icon.btn-outline-danger.posrel(href=`/travel/delete/${travel.id}`)
+                                    span.tf-icons.bx.bx-trash
+                                a.btn.btn-icon.btn-outline-info.posrel(href=`/travel/list/${travel.id}`)
+                                    span.tf-icons.bx.bx-group
+                            
+
+
+block extraJs
+    script(src="/static/js/travels.js") 

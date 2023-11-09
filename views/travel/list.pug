@@ -1,0 +1,32 @@
+extends ../base-panel.pug 
+
+block variables
+    - var pageTitle = 'اردو | اسامی افراد';
+
+block content
+    h4.py-3.breadcrumb-wrapper.mb-4
+    span.text-muted.fw-light اردو / 
+    | اسامی افراد
+
+    div.card
+        h5.card-header.heading-color خروجی
+            a.btn.rounded-pill.btn-icon.btn-outline-success(href=`/travel/export/${travel.id}`, target="_blank")
+                span.tf-icons.bx.bxs-file-export
+        div.table-responsive.text-nowrap
+            table.table
+                thead
+                    tr
+                        th نام و نام خانوادگی
+                        th جنسیت
+                        th نقش
+                        th شماره تلفن
+                tbody.table-border-bottom-0
+                    each lu in travel.users
+                        tr
+                            td
+                                img.rounded-circle.avatar.avatar-xs.pull-up(src=`${lu.profile}`, alt="آواتار")
+                                |  #{lu.firstName} #{lu.lastName}
+                            td= lu.gendere
+                            td= lu.role
+                            td= lu.phoneNumber
+                            

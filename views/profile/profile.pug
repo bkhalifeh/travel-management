@@ -1,0 +1,119 @@
+extends ../base-panel.pug
+
+block vendorsCss
+    link(rel="stylesheet", href="/static/vendor/libs/datatables-bs5/datatables.bootstrap5.css")
+    link(rel="stylesheet", href="/static/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css")
+    link(rel="stylesheet", href="/static/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css")
+
+block pageCss
+    link(rel="stylesheet", href="/static/vendor/css/pages/page-profile.css")
+
+block content
+    h4.py-3.breadcrumb-wrapper.mb-4
+        span.text-muted.fw-light پروفایل کاربر /
+        |  پروفایل
+    div.row
+        div.col-12
+            div.card.mb-4
+                div.user-profile-header-banner
+                    img.rounded-top(src="/static/img/pages/profile-banner.png", alt="Banner image")
+                div.user-profile-header.d-flex.flex-column.flex-sm-row.text-sm-start.text-center.mb-4
+                    div.flex-shrink-0.mt-n2.mx-sm-0.mx-auto
+                        img.d-block.h-auto.ms-0.ms-sm-4.rounded-3.user-profile-img(src=`${user.profile}`, alt="user image")
+                    div.flex-grow-1.mt-3.mt-sm-5
+                        div.d-flex.align-items-md-end.align-items-sm-start.align-items-center.justify-content-md-between.justify-content-start.mx-4.flex-md-row.flex-column.gap-4
+                            div.user-profile-info
+                                h4 #{user.firstName} #{user.lastName}
+                            //- a.btn.btn-primary.text-nowrap(href="javascript:void(0)")
+                            //-     i.bx.bx-user-check.me-1
+                            //-     | متصل
+
+    div.row
+        div.col-md-12
+            ul.nav.nav-pills.flex-column.flex-sm-row.mb-4
+                li.nav-item
+                    a.nav-link.active.my-1.my-md-0(href="javascript:void(0);")
+                        i.bx.bx-user.me-1
+                        |  پروفایل
+                //- li.nav-item
+                //-     a.nav-link(href="/profile/travels")
+                //-         i.bx.bxs-tree-alt.me-1
+                //-         |  اردوهای من
+
+    div.row
+        div.col-xl-4.col-lg-5.col-md-5
+            div.card.mb-4
+                div.card-body
+                    div.d-flex.justify-content-around.flex-wrap.my-4.py-3
+                        //- div.d-flex.align-items-center.me-4.mt-3.gap-3
+                        //-     span.badge.bg-label-primary.p-2.rounded.mt-1
+                        //-         i.bx.bx-check.bx-sm
+                        //-     div
+                        //-         h5.mb-0 1.23k
+                        //-         span اردو شرکت کرده
+                        div.d-flex.align-items-center.mt-3.gap-3
+                            span.badge.bg-label-primary.p-2.rounded.mt-1
+                                i.bx.bx-customize.bx-sm
+                            div
+                                h5.mb-0= userTravels.travels.length
+                                span اردو ثبت نام شده
+
+                    small.text-muted.text-uppercase درباره
+                    ul.list-unstyled.mb-4.mt-3
+                        li.d-flex.align-items-center.mb-3
+                            i(class=`bx bx-${user.gendere}`)
+                            span.fw-semibold.mx-2 جنسیت:
+                            span #{user.gendere === 'male'? 'مرد' : 'زن'}
+                        li.d-flex.align-items-center.mb-3
+                            i(class=`bx bx-${user.field === 'کامپیوتر' ? 'laptop' : 'hard-hat'}`)
+                            span.fw-semibold.mx-2 رشته:
+                            span= user.field
+                        li.d-flex.align-items-center.mb-3
+                            i.bx.bx-star
+                            span.fw-semibold.mx-2 سال ورودی:
+                            span= user.entryYear
+                        li.d-flex.align-items-center.mb-3
+                            i.bx.bxs-id-card
+                            span.fw-semibold.mx-2 کد دانشجویی:
+                            span= user.studentId
+                    small.text-muted.text-uppercase تماس
+                    ul.list-unstyled.mb-4.mt-3
+                        li.d-flex.align-items-center.mb-3
+                            i.bx.bx-phone-call
+                            span.fw-semibold.mx-2 شماره تلفن:
+                            span= user.phoneNumber
+                        li.d-flex.align-items-center.mb-3
+                            i.bx.bx-envelope
+                            span.fw-semibold.mx-2 ایمیل:
+                            span= user.email
+
+        div.col-xl-8.col-lg-7.col-md-7
+            div.card
+                h5.card-header.heading-color اردوهای ثبت نام شده
+                div.card-datatable.table-responsive
+                    table.datatables-projects.border-top.table
+                        thead
+                            tr
+                                th اردو
+                                th مبلغ
+                                th عمل
+                        tbody 
+                            each travel in userTravels.travels
+                                tr
+                                    td= travel.title
+                                    td= travel.price.toLocaleString()
+                                    td
+                                        div.dropdown
+                                            button.btn.p-0.dropdown-toggle.hide-arrow(type="button", data-bs-toggle="dropdown")
+                                                i.bx.bx-dots-vertical-rounded
+                                            div.dropdown-menu
+                                                a.dropdown-item(href=`/travel/${travel.id}`)
+                                                    i.bx.bx-edit-alt.me-1
+                                                    |  جزییات
+                                                //- a.dropdown-item(href=`/travel/signup-cancel/${travel.id}`)
+                                                //-     i.bx.bx-trash.me-1
+                                                //-     |  لغو ثبت نام
+
+block vendorsJs
+    script(src="/static/vendor/libs/datatables-bs5/datatables-bootstrap5.js")
+    script(src="/static/vendor/libs/datatables-bs5/i18n/fa.js")

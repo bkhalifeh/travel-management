@@ -1,0 +1,27 @@
+extends base-auth.pug
+
+block variables
+    - var pageTitle = 'ورود | مدیریت اردو';
+
+block content
+    h4.mb-3.secondary-font به فرست خوش آمدید!
+    p.mb-4 لطفا وارد حساب خود شده و ماجراجویی را شروع کنید
+    form.mb-3(action="/auth/login", method="POST")
+        div.mb-3
+            label.form-label(for="email") ایمیل
+            input.form-control.text-start#email(type="text", name="email", placeholder="ایمیل خود را وارد کنید", autofocus, dir="ltr")
+        div.mb-3.form-password-toggle
+            div.d-flex.justify-content-between
+                label.form-label(for="password") رمز عبور
+                a(href="/auth/forgot-password")
+                    small رمز عبور را فراموش کردید؟
+            div.input-group.input-group-merge
+                input#password.form-control.text-start(type="password", name="password", placeholder="············", aria-describedby="password", dir="ltr")
+                span.input-group-text.cursor-pointer
+                    i.bx.bx-hide
+        div.mb-3
+            button.btn.btn-primary.d-grid.w-100(type="submit") ورود
+    p.text-center
+        span کاربر جدید هستید؟
+        a(href="/auth/register")
+            span یک حساب بسازید

@@ -1,0 +1,16 @@
+extends base-auth.pug
+
+block variables
+    - var pageTitle = 'تایید ایمیل | مدیریت اردو';
+
+block content
+    h4.mb-3.secondary-font ایمیل خود را تایید کنید
+    p.text-start
+        | لینک فعال‌سازی به حساب ایمیل شما ارسال شد
+        br
+        | #{ email }
+        br
+        | لطفا لینک ارسال شده را برای ادامه دنبال کنید
+    p.text-center
+        | ایمیل را دریافت نکردید؟
+        a(href=`/auth/resend-verify/${email}`) ارسال دوباره 

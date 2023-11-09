@@ -1,0 +1,64 @@
+extends ../base-panel.pug 
+
+block variables
+    - var pageTitle = 'تنظیمات | حساب';
+
+block vendorsCss
+    link(rel="stylesheet", href="/static/vendor/libs/select2/select2.css")
+    link(rel="stylesheet", href="/static/vendor/libs/animate-css/animate.css")
+    link(rel="stylesheet", href="/static/vendor/libs/sweetalert2/sweetalert2.css")
+
+block content
+    
+    h4.py-3.breadcrumb-wrapper.mb-4
+        span.text-muted.fw-light تنظیمات / 
+        | حساب
+    div.row
+        div.col-md-12
+            ul.nav.nav-pills.flex-column.flex-md-row.mb-3
+                li.nav-item
+                    a.nav-link.active.my-1.my-md-0(href="javascript:void(0);")
+                        i.bx.bx-user.me-1
+                        |  حساب
+                li.nav-item
+                    a.nav-link(href="/setting/security")
+                        i.bx.bx-lock-alt.me-1
+                        |  امنیت
+            div.card.mb-4
+                div.card-body
+                    form#formAccountSettings(method="POST", enctype="multipart/form-data")
+                        div.d-flex.align-items-start.align-items-sm-center.gap-4
+                            img.d-block.rounded#uploadedAvatar(src=`${user.profile}`, alt="user-avatar", height="100", width="100")
+                            div.button-wrapper
+                                label.btn.btn-primary.me-2.mb-4(for="upload", tabindex="0")
+                                    span.d-none.d-sm-block ارسال تصویر جدید
+                                    i.bx.bx-upload.d-block.d-sm-none
+                                    input#upload.account-file-input(type="file", name="profile", hidden, accept="image/png, image/jpeg")
+                                p.mb-0 فایل‌های JPG، GIF یا PNG مجاز هستند. حداکثر اندازه فایل 800KB.
+                        div.row
+                            div.mb-3.col-md-6
+                                label.form-label(for="phoneNumber") شماره تلفن
+                                input.form-control#phoneNumber(type="text", name="phoneNumber", autofocus)
+                            div.mb-3.col-md-6
+                                label.form-label(for="email") ایمیل
+                                input.form-control.text-start#email(type="text", name="email", dir="ltr")
+                        div.mt-2
+                            button.btn.btn-primary.me-2(type="submit") ذخیره تغییرات
+                            button.btn.btn-label-secondary(type="reset") انصراف
+
+
+block vendorsJs
+    script(src="/static/vendor/libs/select2/select2.js")
+    script(src="/static/vendor/libs/select2/i18n/fa.js")
+    script(src="/static/vendor/libs/formvalidation/dist/js/FormValidation.min.js")
+    script(src="/static/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js")
+    script(src="/static/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js")
+    script(src="/static/vendor/libs/cleavejs/cleave.js")
+    script(src="/static/vendor/libs/cleavejs/cleave-phone.js")
+    script(src="/static/vendor/libs/sweetalert2/sweetalert2.js")
+
+block pageJs
+    script(src="/static/js/pages-account-settings-account.js")
+
+
+

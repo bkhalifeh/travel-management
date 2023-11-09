@@ -1,0 +1,41 @@
+extends ../base-panel.pug 
+
+block variables
+    - var pageTitle = 'صورتحساب';
+
+block vendorsCss
+    link(rel="stylesheet", href="../../assets/vendor/libs/sweetalert2/sweetalert2.css")
+    link(rel="stylesheet", href="../../assets/vendor/libs/select2/select2.css")
+
+
+block content
+    h4.py-3.breadcrumb-wrapper.mb-4  صورتحساب 
+    div.row.gy-4
+        div.col-xl-4.col-lg-5.col-md-5.order-1.order-md-0
+            div.card.mb-4
+                div.card-body
+                    div.d-flex.justify-content-around.flex-wrap.my-4.py-3
+                        div.d-flex.align-items-center.me-4.mt-3.gap-3
+                            span.badge.bg-label-primary.p-2.rounded.mt-1
+                              i.bx.bx-dollar
+                            div
+                              h3.mb-0= totalPrices
+                              span مجموع هزینه ها
+                    div.d-flex.justify-content-center.pt-3
+                      a.btn.btn-primary.me-3(href="#") پرداخت
+        div.col-xl-8.col-lg-7.col-md-7.order-0.order-md-1
+            div.card.mb-4
+                div.card-header.align-items-center
+                    h5.card-action-title.mb-0 اردهای ثبت نام شده
+                div.card-body
+                    div.added-cards
+                        each travel in userTravels.travels
+                            div.cardMaster.border.p-3.rounded.mb-3
+                                div.d-flex.justify-content-between.flex-sm-row.flex-column
+                                    div.card-information
+                                        h6.mb-1= travel.title
+                                        span.card-number= travel.price
+                                    div.d-flex.flex-column.text-start.text-lg-end
+                                        div.d-flex.order-sm-0.order-1.mt-3
+                                            a.btn.btn-label-primary.me-3(href=`/travel/${travel.id}`, target="_blank")  جزییات
+                                            a.btn.btn-label-danger(href=`/travel/signup-cancel/${travel.id}`)  حذف

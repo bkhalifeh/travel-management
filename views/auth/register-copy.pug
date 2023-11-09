@@ -1,0 +1,38 @@
+extends base-auth.pug
+
+block variables
+    - var pageTitle = 'ثبت نام | مدیریت اردو';
+
+block content
+    h4.mb-3.secondary-font ماجراجویی اینجا شروع می‌شود
+    p.mb-4 اردوهایتان را به راحتی و کارآمد مدیریت کنید
+    form.mb-3(action="/auth/register", method="POST")
+        div.mb-3
+            label.form-label(for="username") نام کاربری
+            input#username(class=`form-control text-start${isValidate ? ( isValidUsername ? ' is-valid' : ' is-invalid') : ''}`, type="text", name="username", placeholder="نام کاربری خود را وارد کنید", dir="ltr")
+            if isValidate && !isValidUsername
+                div(class="invalid-feedback")= errUsername
+        div.mb-3
+            label.form-label(for="username") نام کاربری
+            input#username(class=`form-control text-start${isValidate ? ( isValidUsername ? ' is-valid' : ' is-invalid') : ''}`, type="text", name="username", placeholder="نام کاربری خود را وارد کنید", dir="ltr")
+            if isValidate && !isValidUsername
+                div(class="invalid-feedback")= errUsername
+        div.mb-3
+            label.form-label(for="email") ایمیل
+            input#email(class=`form-control text-start${isValidate ? ( isValidEmail ? ' is-valid' : ' is-invalid') : ''}`, type="text", name="email", placeholder="ایمیل خود را وارد کنید", dir="ltr")
+            if isValidate && !isValidEmail
+                div(class="invalid-feedback")= errEmail
+        div.mb-3.form-password-toggle
+            label.form-label(for="password") رمز عبور
+            div.input-group.input-group-merge
+                input#password(class=`form-control text-start${isValidate ? ( isValidPassword ? ' is-valid' : ' is-invalid') : ''}`, type="password", name="password", placeholder="············", aria-describedby="password", dir="ltr")
+                span.input-group-text.cursor-pointer
+                    i.bx.bx-hide
+                if isValidate && !isValidPassword
+                    div(class="invalid-feedback")= errPassword
+            
+        button.btn.btn-primary.d-grid.w-100 عضویت
+    p.text-center
+        span حساب کاربری دارید؟ 
+        a(href="/auth/login")
+            span وارد شوید 

@@ -1,0 +1,75 @@
+extends ../base-panel.pug 
+
+block variables
+    - var pageTitle = 'تنظیمات | امنیت';
+
+block vendorsCss 
+    link(rel="stylesheet", href="../../assets/vendor/libs/select2/select2.css")
+
+block pageCss
+    link(rel="stylesheet", href="../../assets/vendor/css/pages/page-account-settings.css")
+
+block content
+    h4.py-3.breadcrumb-wrapper.mb-4
+        span.text-muted.fw-light تنظیمات / 
+        | امنیت
+
+    div.row
+        div.col-md-12
+            ul.nav.nav-pills.flex-column.flex-md-row.mb-3
+                li.nav-item
+                    a.nav-link(href="/setting/account")
+                        i.bx.bx-user.me-1
+                        |  حساب
+                li.nav-item
+                    a.nav-link.active.my-1.my-md-0(href="javascript:void(0);")
+                        i.bx.bx-lock-alt.me-1
+                        |  امنیت
+            div.card.mb-4
+                div.card-header
+                    h5.mb-0 تغییر رمز عبور
+                div.card-body
+                    form#formAccountSettings(method="POST", onsubmit="return false")
+                        div.row
+                            div.mb-3.col-md-6.form-password-toggle
+                                label.form-label(for="currentPassword") رمز عبور کنونی
+                                div.input-group.input-group-merge
+                                    input.form-control.text-start#currentPassword(type="password", dir="ltr", name="currentPassword", placeholder="············")
+                                    span.input-group-text.cursor-pointer
+                                        i.bx.bx-hide
+                        div.row
+                            div.mb-3.col-md-6.form-password-toggle
+                                label.form-label(for="newPassword") رمز عبور جدید
+                                div.input-group.input-group-merge
+                                    input.form-control.text-start#newPassword(type="password", dir="ltr", name="newPassword", placeholder="············")
+                                    span.input-group-text.cursor-pointer
+                                        i.bx.bx-hide
+                            div.mb-3.col-md-6.form-password-toggle
+                                label.form-label(for="confirmPassword") تایید رمز عبور جدید
+                                div.input-group.input-group-merge
+                                    input.form-control.text-start#confirmPassword(type="password", dir="ltr", name="confirmPassword", placeholder="············")
+                                    span.input-group-text.cursor-pointer
+                                        i.bx.bx-hide
+                            div.col-12.mb-4
+                                p.fw-semibold.mt-2 الزامات رمز عبور:
+                                ul.ps-3.mb-0.lh-1-85
+                                    li.mb-1 حداقل 8 کاراکتر - هرچه بیشتر، بهتر
+                                    li.mb-1 حداقل یک کاراکتر با حرف کوچک
+                                    li حداقل یک عدد، نماد یا کاراکتر فاصله
+                            div.col-12.mt-1
+                                button.btn.btn-primary.me-2(type="submit") ذخیره تغییرات
+                                button.btn.btn-label-secondary(type="reset") انصراف
+
+block vendorsJs
+    script(src="../../assets/vendor/libs/select2/select2.js")
+    script(src="../../assets/vendor/libs/select2/i18n/fa.js")
+    script(src="../../assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js")
+    script(src="../../assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js")
+    script(src="../../assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js")
+    script(src="../../assets/vendor/libs/cleavejs/cleave.js")
+    script(src="../../assets/vendor/libs/cleavejs/cleave-phone.js")
+
+
+block pageJs
+    script(src="../../assets/js/pages-account-settings-security.js")
+    script(src="../../assets/js/modal-enable-otp.js")

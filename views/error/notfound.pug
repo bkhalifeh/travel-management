@@ -1,0 +1,16 @@
+extends ../base-html.pug
+
+block variables
+    - var pageTitle = 'صفحه پیدا نشد!';
+
+block pageCss
+    link(rel="stylesheet", href="/static/vendor/css/pages/page-misc.css")
+
+block pageBody
+    div.container-xxl.container-p-y
+        div.misc-wrapper
+            h1.mb-2.mx-2.secondary-font صفحه یافت نشد :(
+            p.mb-4.mx-2 ما قادر به یافتن صفحه‌ای که به دنبال آن بودید نشدیم
+            a.btn.btn-primary(href="/") بازگشت به خانه
+            div.mt-3
+                img.img-fluid(src="/static/img/illustrations/page-misc-error-light.png", alt="page-misc-error-light", width="500", data-app-light-img="illustrations/page-misc-error-light.png", data-app-dark-img="illustrations/page-misc-error-dark.png")

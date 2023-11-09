@@ -1,0 +1,84 @@
+extends ../base-panel.pug 
+
+block variables
+    - var pageTitle = 'مدیریت کامنت ها';
+
+block vendorsCss
+    link(rel="stylesheet", href="/static/vendor/libs/quill/katex.css")
+    link(rel="stylesheet", href="/static/vendor/libs/quill/editor-fa.css")
+    link(rel="stylesheet", href="/static/vendor/libs/select2/select2.css")
+
+block pageCss
+    link(rel="stylesheet", href="/static/vendor/css/pages/app-email.css")
+
+block content
+    div.app-email.card
+        div.border-0
+            div.row.g-0
+                div.col.app-email-sidebar.border-end.flex-grow-0#app-email-sidebar
+                    div.email-filters.py-2
+                        ul.email-filter-folders.list-unstyled.mb-4
+                            li.active.d-flex.mb-2.justify-content-between(data-target="inbox")
+                                a.d-flex.flex-wrap.align-items-center(href="javascript:void(0);")
+                                    i.bx.bx-envelope
+                                    span.align-middle.ms-2 صندوق ورودی
+                                div.badge.bg-label-primary.rounded-pill= comments.length
+
+                div.col.app-emails-list
+                    div.card.shadow-none.border-0
+                        div.email-list.pt-0
+                            ul.list-unstyled.m-0
+                                each c in comments
+                                    li.email-list-item(data-starred="true", data-bs-toggle="sidebar", data-target=`#comment${c.id}`)
+                                        div.d-flex.align-items-center
+                                            img.d-block.flex-shrink-0.rounded-circle.me-sm-3.me-0(src=`${c.author.profile}`, alt="user-avatar", height="32", width="32")
+                                            div.email-list-item-content.ms-2.ms-sm-0.me-2
+                                                span.email-list-item-username.me-2 #{c.author.firstName} #{c.author.lastName}
+                                                span.email-list-item-subject.d-xl-inline-block.d-block= c.content.substr(0, 70)
+                                            //- div.email-list-item-meta.ms-auto.d-flex.align-items-center
+                                                //- span.email-list-item-label.badge.badge-dot.bg-danger.d-none.d-md-inline-block.me-2(data-label="private")
+                                                //- small.email-list-item-time.text-muted= c.createdAt
+                                                //- ul.list-inline.email-list-item-actions
+                                                //-     li.list-inline-item.email-delete
+                                                //-         a(href=`/comment/delete/${c.id}`) 
+                                                //-             i.bx.bx-trash
+                    div.app-overlay
+                each c in comments
+                    div.col.app-email-view.flex-grow-0.bg-body(id=`comment${c.id}`)
+                        div.card.shadow-none.border-0.rounded-0.app-email-view-header.px-3.py-lg-3.py-2
+                            div.d-flex.justify-content-between.align-items-center.py-2
+                                div.d-flex.align-items-center.overflow-hidden
+                                    i.bx.bx-chevron-left.bx-sm.cursor-pointer.me-2(data-bs-toggle="sidebar", data-target=`#comment${c.id}`)
+                                    h6.text-truncate.mb-0.me-2 #{c.author.firstName} #{c.author.lastName}
+                                    span.badge.bg-label-success= c.author.role
+                            hr.app-email-view-hr.mx-n3.mb-2.mb-lg-3.mt-2.mt-lg-3
+                            div.d-flex.justify-content-between.align-items-center
+                                div.d-flex.align-items-center
+                                    a(href=`/comment/delete/${c.id}`)
+                                        i.bx.bx-trash.cursor-pointer.me-3
+                                div.d-flex.align-items-center
+                                    a(href=`/comment/verified/${c.id}`)
+                                        i.bx.bx-message-rounded-check.cursor-pointer.me-2.fs-4
+                        hr.m-0
+                        div.app-email-view-content.py-4
+                            div.card.email-card-last.mx-sm-4.mx-3.mt-4.border.shadow-none
+                              div.card-header.d-flex.justify-content-between.align-items-center.flex-wrap
+                                div.d-flex.align-items-center.mb-sm-0.mb-3
+                                  img.flex-shrink-0.rounded-circle.me-3(src="/static/img/avatars/1.png", alt="user-avatar", height="40", width="40")
+                                  div.flex-grow-1.ms-1.primary-font
+                                    h6.m-0 #{c.author.firstName} #{c.author.lastName}
+                                    small.text-muted= c.author.email
+                                div.d-flex.align-items-center
+                                  p.mb-0.me-3.text-muted= c.createdAt
+                              div.card-body
+                                p= c.content
+block vendorsJs
+    script(src="/static/vendor/libs/quill/katex.js")
+    script(src="/static/vendor/libs/quill/quill.js")
+    script(src="/static/vendor/libs/select2/select2.js")
+    script(src="/static/vendor/libs/select2/i18n/fa.js")
+    script(src="/static/vendor/libs/block-ui/block-ui.js")
+
+
+//- block pageJs
+//-     script(src="/static/js/app-email.js")

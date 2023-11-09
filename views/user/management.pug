@@ -1,0 +1,335 @@
+extends ../base-panel.pug 
+
+block variables
+    - var pageTitle = 'مدیریت کاربران';
+
+
+block vendorsCss
+    link(rel="stylesheet", href="/static/vendor/libs/datatables-bs5/datatables.bootstrap5.css")
+    link(rel="stylesheet", href="/static/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css")
+
+block content
+    h4.py-3.breadcrumb-wrapper.mb-2 مدیریت کاربران
+    div.row.g-4
+        if CreateUserRoles.includes(user.role)
+            div.col-xl-4.col-lg-6.col-md-6
+                div.card.h-100
+                    div.row.h-100
+                        div.col-sm-5
+                            div.d-flex.align-items-end.h-100.justify-content-center.mt-1.mt-sm-0
+                                img.img-fluid.mb-2.mb-sm-0.mt-4(src="/static/img/illustrations/man-with-laptop-light.png", alt="Image", width="100", data-app-light-img="illustrations/lady-with-laptop-light.png", data-app-dark-img="illustrations/lady-with-laptop-dark.png")
+                        div.col-sm-7
+                            div.card-body.text-sm-end.text-center.ps-sm-0
+                                button.btn.btn-primary.mb-3.text-nowrap.add-new-role(data-bs-target="#addUserModal", data-bs-toggle="modal") افزودن کاربر جدید
+                                p.mb-0 کاربر بدون تایید ایمیل اضافه کنید
+        div.col-12
+            div.card
+                div.card-datatable.table-responsive
+                    table.datatables-users.table.border-top
+                        thead
+                            tr
+                                th
+                                th کاربر
+                                th نقش
+                                th عمل‌ها
+    each uf in users
+        div.modal.fade(tabindex="-1", aria-hidden="true", id=`EDIT${uf.id}`)
+            div.modal-dialog.modal-lg.modal-dialog-centered.modal-add-new-role
+                div.modal-content.p-3.p-md-5
+                    button.btn-close.btn-pinned(type="button", data-bs-dismiss="modal", aria-label="Close")
+                    div.modal-body
+                        div.text-center.mb-4.mt-0.mt-md-n2
+                            h3.role-title.secondary-font ویرایش اطلاعات کاربر
+                        form.row.g-3(action=`/user/update/${uf.id}`, method="POST")
+                            //- div.col-md-6
+                            //-     label.form-label(for=`firstNameEdit${uf.id}`) نام
+                            //-     input(id=`firstNameEdit${uf.id}`, class=`form-control text-start`, type="text", name="firstName", value=`${uf.firstName}`)
+                            //- div.col-md-6
+                            //-     label.form-label(for=`lastNameEdit${uf.id}`) نام خانوادگی
+                            //-     input(id=`lastNameEdit${uf.id}`, class=`form-control text-start`, type="text", name="lastName", value=`${uf.lastName}`)
+                            div.col-md-7
+                                label.form-label(for=`emailEdit${uf.id}`) ایمیل
+                                input(id=`emailEdit${uf.id}`, class=`form-control text-start`, type="text", name="email", dir="ltr", value=`${uf.email}`)
+                            //- div.col-md-5
+                            //-     label.form-label جنسیت
+                            //-     div.col.mt-2
+                            //-         div.form-check.form-check-inline
+                            //-             if uf.gendere === 'male'
+                            //-                 input.form-check-input(id=`gendereMaleEdit${uf.id}`, name="gendere", value="male", type="radio", checked)
+                            //-             else
+                            //-                 input.form-check-input(id=`gendereMaleEdit${uf.id}`, name="gendere", value="male", type="radio")
+                            //-             label.form-check-label(for=id=`gendereMaleEdit${uf.id}`) مرد
+                            //-         div.form-check.form-check-inline
+                            //-             if uf.gendere === 'female'
+                            //-                 input.form-check-input(id=`gendereFemaleEdit${uf.id}`, name="gendere", value="female", type="radio", checked)
+                            //-             else
+                            //-                 input.form-check-input(id=`gendereFemaleEdit${uf.id}`, name="gendere", value="female", type="radio")
+                            //-             label.form-check-label(for=id=`gendereFemaleEdit${uf.id}`) زن
+                            div.col-md-6.form-password-toggle
+                                label.form-label(for=`passwordEdit${uf.id}`) رمز عبور
+                                div.input-group.input-group-merge
+                                    input(id=`passwordEdit${uf.id}`, class=`form-control text-start`, type="password", name="password", placeholder="············", aria-describedby="password", dir="ltr")
+                                    span.input-group-text.cursor-pointer
+                                        i.bx.bx-hide
+                            div.col-md-6.form-password-toggle
+                                label.form-label(for=`repasswordEdit${uf.id}`) تکرار رمز عبور
+                                div.input-group.input-group-merge
+                                    input(id=`repasswordEdit${uf.id}`,class=`form-control text-start`, type="password", name="repeatPassword", placeholder="············", aria-describedby="password", dir="ltr")
+                                    span.input-group-text.cursor-pointer
+                                        i.bx.bx-hide
+                            div.col-md-6
+                                label.form-label(for=`roleEdit${uf.id}`) نوع کاربری
+                                select.form-select(id=`roleEdit${uf.id}`, name="role")
+                                    //- console.log(uf.role === 'دانشجو')
+                                    if uf.role == 'دانشجو'
+                                        option(value="دانشجو", selected) دانشجو
+                                    else
+                                        option(value="دانشجو") دانشجو
+
+                                    if ['مدیر سامانه', 'مدیر دانشکده', 'مدیر گروه کامپیوتر'].includes(user.role)
+                                        
+                                        if uf.role == "مدیر انجمن علمی کامپیوتر"
+                                            option(value="مدیر انجمن علمی کامپیوتر", selected) مدیر انجمن علمی کامپیوتر
+                                        else
+                                            option(value="مدیر انجمن علمی کامپیوتر") مدیر انجمن علمی کامپیوتر
+                                        
+                                        if uf.role == "عضو انجمن علمی کامپیوتر"
+                                            option(value="عضو انجمن علمی کامپیوتر", selected) عضو انجمن علمی کامپیوتر
+                                        else
+                                            option(value="عضو انجمن علمی کامپیوتر") عضو انجمن علمی کامپیوتر
+
+
+                                    if ['مدیر سامانه', 'مدیر دانشکده', 'مدیر گروه صنایع'].includes(user.role)
+                                        if uf.role == "مدیر انجمن علمی صنایع"
+                                            option(value="مدیر انجمن علمی صنایع", selected) مدیر انجمن علمی صنایع
+                                        else
+                                            option(value="مدیر انجمن علمی صنایع") مدیر انجمن علمی صنایع
+                                        
+                                        if uf.role == "عضو انجمن علمی صنایع"
+                                            option(value="عضو انجمن علمی صنایع", selected) عضو انجمن علمی صنایع
+                                        else
+                                            option(value="عضو انجمن علمی صنایع") عضو انجمن علمی صنایع
+                                        
+
+                                    if ['مدیر سامانه', 'مدیر دانشکده'].includes(user.role)
+                                        
+                                        if uf.role == "استاد"
+                                            option(value="استاد", selected) استاد
+                                        else
+                                            option(value="استاد") استاد
+
+                                        if uf.role == "کارمند"
+                                            option(value="کارمند", selected) کارمند
+                                        else
+                                            option(value="کارمند") کارمند
+                                        
+                                        if uf.role == "پیمانکار"
+                                            option(value="پیمانکار", selected) پیمانکار
+                                        else
+                                            option(value="پیمانکار") پیمانکار
+                                        
+                                        if uf.role == "مدیر گروه کامپیوتر"
+                                            option(value="مدیر گروه کامپیوتر", selected) مدیر گروه کامپیوتر
+                                        else
+                                            option(value="مدیر گروه کامپیوتر") مدیر گروه کامپیوتر
+                                        
+                                        if uf.role == "مدیر گروه صنایع"
+                                            option(value="مدیر گروه صنایع", selected) مدیر گروه صنایع
+                                        else
+                                            option(value="مدیر گروه صنایع") مدیر گروه صنایع
+
+                                    if ['مدیر سامانه'].includes(user.role)
+                                        if uf.role == "مدیر دانشکده"
+                                            option(value="مدیر دانشکده", selected) مدیر دانشکده
+                                        else
+                                            option(value="مدیر دانشکده") مدیر دانشکده
+
+                            div.col-md-6
+                                label.form-label(for=`phoneNumberEdit${uf.id}`) شماره تلفن
+                                input(id=`phoneNumberEdit${uf.id}`, class=`form-control text-start`, type="text", name="phoneNumber", value=`${uf.phoneNumber}`, dir="ltr")
+                            
+                            div.col-12.text-center#containerSubmitEdit
+                                button.btn.btn-primary.me-sm-3.me-1(type="submit") ثبت
+                                button.btn.btn-label-secondary(type="reset", data-bs-dismiss="modal", aria-label="Close") انصراف
+
+
+
+
+        //- div.modal.fade(tabindex="-1", aria-hidden="true", id=`EDIT${uf.id}`)
+        //-     div.modal-dialog.modal-dialog-scrollable(role="document")
+        //-         div.modal-content.p-3.p-md-5
+        //-             div.modal-header
+        //-                 h5.modal-title.secondary-font#modalScrollableTitle ویرایش اطلاعات کاربر 
+        //-                 button.btn-close(type="button", data-bs-dismiss="modal", aria-label="Close")
+
+        div.modal.fade(tabindex="-1", aria-hidden="true", id=`SHOW${uf.id}`)
+            div.modal-dialog.modal-dialog-scrollable(role="document")
+                div.modal-content.p-3.p-md-5
+                    div.modal-header
+                        h5.modal-title.secondary-font#modalScrollableTitle اطلاعات کاربر 
+                        button.btn-close(type="button", data-bs-dismiss="modal", aria-label="Close")
+                    div.modal-body
+                        div.user-avatar-section
+                            div.d-flex.align-items-center.flex-column
+                                img.img-fluid.rounded.my-4(src=`${uf.profile}`, height="110", width="110", alt="User avatar")
+                                div.user-info.text-center
+                                    h5.mb-2 #{uf.firstName} #{uf.lastName}
+                                    span.badge.bg-label-secondary= uf.role
+
+                        h5.pb-2.border-bottom.mb-4.secondary-font جزئیات
+                        div.info-container
+                            ul.list-unstyled
+                                li.mb-3
+                                    span.fw-bold.me-2 نام و نام خانوادگی:
+                                    span #{uf.firstName} #{uf.lastName}
+                                li.mb-3
+                                    span.fw-bold.me-2 تماس:
+                                    span.d-inline-block(dir="ltr")= uf.phoneNumber
+                                li.mb-3
+                                    span.fw-bold.me-2 ایمیل:
+                                    span= uf.email
+                                li.mb-3
+                                    span.fw-bold.me-2 جنسیت:
+                                    span #{uf.gendere === 'male'? 'مرد' : 'زن'}
+                                li.mb-3
+                                    span.fw-bold.me-2 نقش:
+                                    span= uf.role
+                                if StudentRoles.includes(uf.role)
+                                    li.mb-3
+                                        span.fw-bold.me-2 رشته:
+                                        span= uf.field                               
+                                    li.mb-3
+                                        span.fw-bold.me-2 سال ورودی:
+                                        span= uf.entryYear 
+                                    li.mb-3
+                                        span.fw-bold.me-2 شماره دانشجویی:
+                                        span= uf.studentId 
+
+                    div.modal-footer
+                        button.btn.btn-label-secondary(type="button", data-bs-dismiss="modal") بستن
+
+
+
+    if CreateUserRoles.includes(user.role)
+        div.modal.fade#addUserModal(tabindex="-1", aria-hidden="true")
+            div.modal-dialog.modal-lg.modal-dialog-centered.modal-add-new-role
+                div.modal-content.p-3.p-md-5
+                    button.btn-close.btn-pinned(type="button", data-bs-dismiss="modal", aria-label="Close")
+                    div.modal-body
+                        div.text-center.mb-4.mt-0.mt-md-n2
+                            h3.role-title.secondary-font افزودن کاربر جدید
+                        form.row.g-3#containerForm(action="/user", method="POST")
+                            div.col-md-6
+                                label.form-label(for="firstName") نام
+                                input#firstName(class=`form-control text-start`, type="text", name="firstName")
+                            div.col-md-6
+                                label.form-label(for="lastName") نام خانوادگی
+                                input#lastName(class=`form-control text-start`, type="text", name="lastName")
+                            div.col-md-7
+                                label.form-label(for="email") ایمیل
+                                input#email(class=`form-control text-start`, type="text", name="email", dir="ltr")
+                            div.col-md-5
+                                label.form-label جنسیت
+                                div.col.mt-2
+                                    div.form-check.form-check-inline
+                                        input.form-check-input#gendereMale(name="gendere", value="male", type="radio", checked)
+                                        label.form-check-label(for="gendereMale") مرد
+                                    div.form-check.form-check-inline
+                                        input.form-check-input#gendereFemale(name="gendere", value="female", type="radio")
+                                        label.form-check-label(for="gendereFemale") زن
+                            div.col-md-6.form-password-toggle
+                                label.form-label(for="password") رمز عبور
+                                div.input-group.input-group-merge
+                                    input#password(class=`form-control text-start`, type="password", name="password", placeholder="············", aria-describedby="password", dir="ltr")
+                                    span.input-group-text.cursor-pointer
+                                        i.bx.bx-hide
+                            div.col-md-6.form-password-toggle
+                                label.form-label(for="repassword") تکرار رمز عبور
+                                div.input-group.input-group-merge
+                                    input#repassword(class=`form-control text-start`, type="password", name="repeatPassword", placeholder="············", aria-describedby="password", dir="ltr")
+                                    span.input-group-text.cursor-pointer
+                                        i.bx.bx-hide
+                            div.col-md-6
+                                label.form-label(for="role") نوع کاربری
+                                select.form-select#role(name="role")
+                                    option(value="دانشجو") دانشجو
+
+                                    if ['مدیر سامانه', 'مدیر دانشکده', 'مدیر گروه کامپیوتر'].includes(user.role)
+                                        option(value="مدیر انجمن علمی کامپیوتر") مدیر انجمن علمی کامپیوتر
+                                        option(value="عضو انجمن علمی کامپیوتر") عضو انجمن علمی کامپیوتر
+
+                                    if ['مدیر سامانه', 'مدیر دانشکده', 'مدیر گروه صنایع'].includes(user.role)
+                                        option(value="مدیر انجمن علمی صنایع") مدیر انجمن علمی صنایع
+                                        option(value="عضو انجمن علمی صنایع") عضو انجمن علمی صنایع
+
+                                    if ['مدیر سامانه', 'مدیر دانشکده'].includes(user.role)
+                                        option(value="استاد") استاد
+                                        option(value="کارمند") کارمند
+                                        option(value="پیمانکار") پیمانکار
+                                        option(value="مدیر گروه کامپیوتر") مدیر گروه کامپیوتر
+                                        option(value="مدیر گروه صنایع") مدیر گروه صنایع
+
+                                    if ['مدیر سامانه'].includes(user.role)
+                                        option(value="مدیر دانشکده") مدیر دانشکده
+
+                            div.col-md-6
+                                label.form-label(for="phoneNumber") شماره تلفن
+                                input#phoneNumber(class=`form-control text-start`, type="text", name="phoneNumber", dir="ltr")
+                            div.col-md-5#containerField
+                                label.form-label(for="field") رشته
+                                select.form-select#field(name="field")
+                                    each f in fields
+                                        option(value=`${f}`)= f
+                            div.col-md-4#containerStudentId
+                                label.form-label(for="studentId") شماره دانشجویی
+                                input#studentId(class=`form-control text-start`, type="text", name="studentId", dir="ltr")
+                            div.col-md-3#containerEntryYear
+                                label.form-label(for="entryYear") سال ورودی
+                                select.form-select#entryYear(name="entryYear")
+                                    each ey in entryYears
+                                        option(value=`${ey}`)= ey
+                            div.col-12.text-center#containerSubmit
+                                button.btn.btn-primary.me-sm-3.me-1(type="submit") ثبت
+                                button.btn.btn-label-secondary(type="reset", data-bs-dismiss="modal", aria-label="Close") انصراف
+
+
+
+
+block vendorsJs
+    script(src="/static/vendor/libs/datatables-bs5/datatables-bootstrap5.js")
+    script(src="/static/vendor/libs/datatables-bs5/i18n/fa.js")
+    script(src="/static/vendor/libs/formvalidation/dist/js/FormValidation.min.js")
+    script(src="/static/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js")
+    script(src="/static/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js")
+    script(src="/static/vendor/js/dropdown-hover.js")
+
+
+block pageJs
+    //- script(src="/static/js/app-access-roles.js")
+    script(src="/static/js/modal-add-role.js")
+
+
+block extraJs
+    script(src="/static/js/user-management.js")
+    if CreateUserRoles.includes(user.role)
+        script.
+            const role = document.getElementById('role');
+            const containerForm = document.getElementById('containerForm');
+            const containerField = document.getElementById('containerField');
+            const containerStudentId = document.getElementById('containerStudentId');
+            const containerEntryYear = document.getElementById('containerEntryYear');
+            const containerSubmit = document.getElementById('containerSubmit');
+            let studentField = true;
+            role.addEventListener('change', (ev) => {
+                if (studentField && ev.target.value !== 'دانشجو') {
+                    studentField = false;
+                    containerForm.removeChild(containerField);
+                    containerForm.removeChild(containerStudentId);
+                    containerForm.removeChild(containerEntryYear);
+                } else if (!studentField && ev.target.value === 'دانشجو') {
+                    studentField = true;
+                    containerForm.insertBefore(containerField, containerSubmit);
+                    containerForm.insertBefore(containerStudentId, containerSubmit);
+                    containerForm.insertBefore(containerEntryYear, containerSubmit);
+                }
+            });

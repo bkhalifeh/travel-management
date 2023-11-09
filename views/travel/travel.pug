@@ -1,0 +1,167 @@
+extends ../base-panel.pug 
+
+block variables
+    - var pageTitle = travel.title;
+    - var reminderCap = travel.capacity - travel.users.length;
+
+block vendorsCss
+    link(rel="stylesheet", href="/static/vendor/libs/flatpickr/flatpickr.css")
+
+block pageCss
+    link(rel="stylesheet", href="/static/vendor/css/pages/app-invoice.css")
+
+
+block content
+    div.row
+        div.col-xl-2.col-lg-2.col-md-4.col-sm-4.col-6.mb-4
+            div.card(style="height: 100%;")
+                div.card-body.text-center
+                    div.avatar.avatar-md.mx-auto.mb-3
+                        span.avatar-initial.rounded-circle.bg-label-info
+                            i.bx.bx-buildings.fs-3
+                    span.d-block.mb-1.text-nowrap محل اقامت
+                    h4.mb-n3= travel.residence
+        div.col-xl-2.col-lg-2.col-md-4.col-sm-4.col-6.mb-4
+            div.card(style="height: 100%;")
+                div.card-body.text-center
+                    div.avatar.avatar-md.mx-auto.mb-3
+                        span.avatar-initial.rounded-circle.bg-label-warning
+                            i.bx.bx-car.fs-3
+                    span.d-block.mb-1.text-nowrap وسیله حمل و نقل
+                    h4.mb-n3= travel.transportation
+        div.col-xl-2.col-lg-2.col-md-4.col-sm-4.col-6.mb-4
+            div.card(style="height: 100%;")
+                div.card-body.text-center
+                    div.avatar.avatar-md.mx-auto.mb-3
+                        span.avatar-initial.rounded-circle.bg-label-danger
+                            i.bx.bx-restaurant.fs-3
+                    span.d-block.mb-1.text-nowrap وعده‌های غذایی
+                    h4.mb-n3= travel.meals
+        div.col-xl-2.col-lg-2.col-md-4.col-sm-4.col-6.mb-4
+            div.card(style="height: 100%;")
+                div.card-body.text-center
+                    div.avatar.avatar-md.mx-auto.mb-3
+                        span.avatar-initial.rounded-circle.bg-label-primary
+                            i.bx.bx-check-shield.fs-3
+                    span.d-block.mb-1.text-nowrap بیمه
+                    h4.mb-n3= travel.insurance
+        div.col-xl-2.col-lg-2.col-md-4.col-sm-4.col-6.mb-4
+            div.card(style="height: 100%;")
+                div.card-body.text-center
+                    div.avatar.avatar-md.mx-auto.mb-3
+                        span.avatar-initial.rounded-circle.bg-label-success
+                            i.bx.bxs-hourglass-top.fs-3
+                    span.d-block.mb-1.text-nowrap مدت زمان برنامه
+                    h4.mb-n3= travel.duration
+        div.col-xl-2.col-lg-2.col-md-4.col-sm-4.col-6.mb-4
+            div.card(style="height: 100%;")
+                div.card-body.text-center
+                    div.avatar.avatar-md.mx-auto.mb-3
+                        span.avatar-initial.rounded-circle.bg-label-danger
+                            i.bx.bx-current-location.fs-3
+                    span.d-block.mb-1.text-nowrap مکان برگزاری
+                    h4.mb-n3= travel.location
+
+    div.row.invoice-preview
+        div.col-xl-9.col-md-8.col-12.mb-md-0.mb-4
+            div.card.invoice-preview-card
+                div.card-body
+                    div.d-flex.justify-content-between.flex-xl-row.flex-md-column.flex-sm-row.flex-column.p-sm-3.p-0
+                        div.mb-xl-0.mb-4
+                            div.d-flex.align-items-center.svg-illustration.mb-3.gap-2
+                                span.app-brand-text.h3.mb-0.fw-bold= travel.title
+                            h4
+                                div.demo-inline-spacing
+                                    span(class=`badge bg-label-${reminderCap > 0 ? 'success' : 'danger'}`) ظرفیت: #{reminderCap} نفر
+                                    //- span.badge.bg-label-info #{travel.price} تومان 
+                            
+                            h6.mb-1 توضیحات:
+                            p.mb-1= travel.caption
+                        div.col-md-3
+                            img.card-img.card-img-left.rounded(src=`${travel.image}`, alt="")
+                //- hr.my-0
+                div.card-body
+                    div.row.p-sm-3.p-0
+                        div.col-xl-6.col-md-12.col-sm-5.col-12.mb-xl-0.mb-md-4.mb-sm-0.mb-4
+                            h6.pb-2 خدمات:
+                            ul.list-group.list-group-timeline
+                                each service in travel.services
+                                    li.list-group-item.list-group-timeline-primary= service
+
+                        div.col-xl-6.col-md-12.col-sm-7.col-12
+                            h6.pb-2 وسایل مورد نیاز:
+                            ul.list-group.list-group-timeline
+                                each item in travel.itemsNeeded
+                                    li.list-group-item.list-group-timeline-danger= item
+            hr
+            
+            div.card
+                h6.card-header.border-0 نظر جدید
+                div.card-body.pt-0.px-3
+                    form(method="POST", action="/comment/create")
+                        input(type="hidden", name="travelId", value=`${travel.id}`)
+                        div.d-flex.justify-content-start
+                            textarea.form-control(rows="3", maxlength="255", name="content", placeholder="متن خود را وارد کنید")
+                        br
+                        div.d-flex.justify-content-end.align-items-center
+                            button.btn.btn-primary
+                                i.bx.bx-paper-plane.me-1
+                                span.align-middle ارسال
+            each comment in comments
+                br
+                div.card
+                    div.card-header.d-flex.justify-content-between.align-items-center.flex-wrap
+                        div.d-flex.align-items-center.mb-sm-0.mb-3
+                            img.flex-shrink-0.rounded-circle.me-3(src=`${comment.author.profile}`, alt="user-avatar", height="40", width="40")
+                            div.flex-grow-1.ms-1.primary-font
+                                h6.m-0 #{comment.author.firstName} #{comment.author.lastName}
+                        div.d-flex.align-items-center
+                            p.mb-0.me-3.text-muted= customeFormatTime(comment.createdAt)
+                    div.card-body
+                        p= comment.content
+
+
+        div.col-xl-3.col-md-4.col-12.invoice-actions
+            div.card
+                div.card-body.text-center
+                    h3.mb-0.text-primary #{travel.price.toLocaleString()} تومان
+                    br
+                    if (travel.manager.role === user.role || [Role.SystemManager, Role.CollegeManager].includes(user.role) || (travel.manager.role === Role.ComputerForumAdmin && user.role === Role.ComputerGroupManager) || (travel.manager.role === Role.IndustryForumAdmin && user.role === Role.IndustryGroupManager))
+                        a.btn.btn-info.d-grid.w-100.mb-3(href=`/travel/list/${travel.id}`)
+                            span.d-flex.align-items-center.justify-content-center.text-nowrap
+                                i.bx.bx-group.bx-xs.me-2
+                                | اسامی افراد
+                        a.btn.btn-danger.d-grid.w-100.mb-3(href=`/travel/delete/${travel.id}`)
+                            span.d-flex.align-items-center.justify-content-center.text-nowrap
+                                i.bx.bx-group.bx-xs.me-2
+                                | حذف اردو
+                        a.btn.btn-warning.d-grid.w-100.mb-3(href=`/travel/edit/${travel.id}`)
+                            span.d-flex.align-items-center.justify-content-center.text-nowrap
+                                i.bx.bx-group.bx-xs.me-2
+                                | ویرایش ادو
+                        
+
+                    if isSignedUp
+                        a.btn.btn-secondary.d-grid.w-100.mb-3(href=`/travel/signup-cancel/${travel.id}`)
+                            span.d-flex.align-items-center.justify-content-center.text-nowrap
+                                i.bx.bx-user-x.bx-xs.me-2
+                                | لغو ثبت نام
+                    else
+                        a.btn.btn-primary.d-grid.w-100.mb-3(href=`/travel/signup/${travel.id}`)
+                            span.d-flex.align-items-center.justify-content-center.text-nowrap
+                                i.bx.bx-user-plus.bx-xs.me-2
+                                | ثبت نام در اردو
+
+
+block vendorsJs
+    script(src="/static/vendor/libs/moment/moment.js")
+    script(src="/static/vendor/libs/jdate/jdate.js")
+    script(src="/static/vendor/libs/flatpickr/flatpickr-jdate.js")
+    script(src="/static/vendor/libs/flatpickr/l10n/fa-jdate.js")
+    script(src="/static/vendor/libs/cleavejs/cleave.js")
+    script(src="/static/vendor/libs/cleavejs/cleave-phone.js")
+
+
+block pageJs
+    script(src="/static/js/offcanvas-add-payment.js")
+    script(src="/static/js/offcanvas-send-invoice.js")

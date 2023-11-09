@@ -1,0 +1,79 @@
+extends base-auth.pug
+
+block variables
+    - var pageTitle = 'ثبت نام | مدیریت اردو';
+
+block content
+    h4.mb-3.secondary-font ماجراجویی اینجا شروع می‌شود
+    form.mb-3(action="/auth/register", method="POST")
+        div.row.g-3#containerForm
+            div.col-md-6
+                label.form-label(for="firstName") نام
+                input#firstName(class=`form-control text-start`, type="text", name="firstName")
+            div.col-md-6
+                label.form-label(for="lastName") نام خانوادگی
+                input#lastName(class=`form-control text-start`, type="text", name="lastName")
+
+
+            div.col-md-7
+                label.form-label(for="email") ایمیل
+                input#email(class=`form-control text-start`, type="text", name="email", dir="ltr")
+            div.col-md-5
+                label.form-label جنسیت
+                div.col.mt-2
+                    div.form-check.form-check-inline
+                        input.form-check-input#gendereMale(name="gendere", value="male", type="radio", checked)
+                        label.form-check-label(for="gendereMale") مرد
+                    div.form-check.form-check-inline
+                        input.form-check-input#gendereFemale(name="gendere", value="female", type="radio")
+                        label.form-check-label(for="gendereFemale") زن
+
+            div.col-md-6.form-password-toggle
+                label.form-label(for="password") رمز عبور
+                div.input-group.input-group-merge
+                    input#password(class=`form-control text-start`, type="password", name="password", placeholder="············", aria-describedby="password", dir="ltr")
+                    span.input-group-text.cursor-pointer
+                        i.bx.bx-hide
+            div.col-md-6.form-password-toggle
+                label.form-label(for="repassword") تکرار رمز عبور
+                div.input-group.input-group-merge
+                    input#repassword(class=`form-control text-start`, type="password", name="repeatPassword", placeholder="············", aria-describedby="password", dir="ltr")
+                    span.input-group-text.cursor-pointer
+                        i.bx.bx-hide
+
+            div.col-md-6
+                label.form-label(for="role") نوع کاربری
+                select.form-select#role(name="role")
+                        option(value="دانشجو") دانشجو
+                        option(value="استاد") استاد
+                        option(value="کارمند") کارمند
+                        option(value="پیمانکار") پیمانکار
+            div.col-md-6
+                label.form-label(for="phoneNumber") شماره تلفن
+                input#phoneNumber(class=`form-control text-start`, type="text", name="phoneNumber", dir="ltr")
+
+            div.col-md-5#containerField
+                label.form-label(for="field") رشته
+                select.form-select#field(name="field")
+                    each f in fields
+                        option(value=`${f}`)= f
+            div.col-md-4#containerStudentId
+                label.form-label(for="studentId") شماره دانشجویی
+                input#studentId(class=`form-control text-start`, type="text", name="studentId", dir="ltr")
+            div.col-md-3#containerEntryYear
+                label.form-label(for="entryYear") سال ورودی
+                select.form-select#entryYear(name="entryYear")
+                    each ey in entryYears
+                        option(value=`${ey}`)= ey
+
+        div.col-md-12
+            br
+            button.btn.btn-primary.d-grid.w-100 عضویت
+    p.text-center
+        span حساب کاربری دارید؟ 
+        a(href="/auth/login")
+            span وارد شوید 
+
+
+block extraJs
+    script(src="/static/js/auth-register.js") 

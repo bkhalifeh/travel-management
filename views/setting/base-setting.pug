@@ -1,0 +1,26 @@
+extends ../base-panel.pug 
+
+block vendorsCss
+    link(rel="stylesheet", href="/static/vendor/libs/select2/select2.css")
+    link(rel="stylesheet", href="/static/vendor/libs/animate-css/animate.css")
+    link(rel="stylesheet", href="/static/vendor/libs/sweetalert2/sweetalert2.css")
+
+block pageCss
+    link(rel="stylesheet", href="../../assets/vendor/css/pages/page-account-settings.css")
+
+
+block content
+    h4.py-3.breadcrumb-wrapper.mb-4
+        span.text-muted.fw-light تنظیمات / 
+        | حساب
+    div.row
+        div.col-md-12
+            ul.nav.nav-pills.flex-column.flex-md-row.mb-3
+                li.nav-item
+                    a.nav-link.active.my-1.my-md-0(href="javascript:void(0);")
+                        i.bx.bx-user.me-1
+                        |  حساب
+                li.nav-item
+                    a.nav-link(href="/setting/security")
+                        i.bx.bx-lock-alt.me-1
+                        |  امنیت
