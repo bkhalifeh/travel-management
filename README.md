@@ -2,7 +2,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) A website for student travel management.
+A website for student travel management.
 
 ## Installation
 
